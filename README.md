@@ -1,6 +1,7 @@
-
 # UnifiedGenderNet  
-[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)  [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE-CODE.md)  [![Status](https://img.shields.io/badge/status-under--review-yellow.svg)](#) 
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE-CODE.md)  
+[![Status](https://img.shields.io/badge/status-under--review-yellow.svg)](#)  
 
 A **unified** deep learning model for gender prediction that works with **either a hand or a face** image at inference time.  
 
@@ -21,7 +22,7 @@ Full ablations, fairness analyses, and cross-dataset evaluations will be release
 ```bash
 git clone https://github.com/PatternBiometrics/UnifiedGenderNet.git
 cd UnifiedGenderNet
-````
+```
 
 ### Create and activate a virtual environment
 
@@ -41,49 +42,97 @@ pip install -r requirements.txt
 
 ```bash
 python scripts/download_checkpoints.py
-```
-
-```bash
 python scripts/download_metrics_csv.py
 ```
-
 
 ---
 
 ## 2. Dataset
 
-We release a derived subset of **HaGRID** with aligned face–hand crops.
+We release a **derived subset of HaGRID** with aligned face–hand crops.  
+Every record pairs a cropped hand with the same user’s face and comes with audited demographic labels:
 
-* **Metadata**: `train.csv`, `val.csv`, `test.csv`
-* **Cropped images**: `/faces/` and `/hands/`
-* **License**: Inherits from HaGRID (attribution + conditions)
+| Column            | Description                               |
+|-------------------|-------------------------------------------|
+| `id`              | Unique sample ID                          |
+| `user_id`         | Subject identifier (across samples)       |
+| `age`             | Age bucket                                |
+| `gender`          | Male / Female                             |
+| `race`            | Skin-tone class                           |
+| `labels`          | HaGRID gesture labels (stop, stop_inverted, palm) |
+| `hand_image_name` | Filename of the cropped hand              |
+| `face_image_name` | Filename of the cropped face              |
 
-👉 See: *HaGRID-Derived Face–Hand Pairs*
+### Data distribution
+
+* **`aligned_dataset.zip`** – cropped & aligned images  
+* **`train.csv` · `val.csv` · `test.csv`** – metadata splits  
+
+### Data structure
+
+```
+data/
+└── Shared_Derived_HaGRID_unified_Model_For_Sex_Prediction/
+    ├── train.csv
+    ├── val.csv
+    ├── test.csv
+    └── images/
+        └── content/
+            └── aligned_dataset/
+                ├── faces/
+                │   ├── F_<uuid>.jpg
+                │   └── …
+                └── hands/
+                    ├── H_<uuid>.jpg
+                    └── …
+```
+
+* **Face crops** in `faces/` start with `F_`  
+* **Hand crops** in `hands/` start with `H_`  
+* The UUID suffix is identical for the paired images  
+
+> Example pair:  
+> `faces/F_fe7d7a58-cc64-4755-849a-55970b08b75a.jpg`  
+> `hands/H_fe7d7a58-cc64-4755-849a-55970b08b75a.jpg`
+
+### Minimal usage example
+
+```python
+import pandas as pd
+from pathlib import Path
+
+root = Path("data/Shared_Derived_HaGRID_unified_Model_For_Sex_Prediction")
+df   = pd.read_csv(root / "train.csv")
+print(f"{len(df):,} training samples")
+print(df.head())
+
+img_root = root / "images" / "content" / "aligned_dataset"
+hand_path = img_root / "hands" / df.loc[0, "hand_image_name"]
+face_path = img_root / "faces" / df.loc[0, "face_image_name"]
+print(hand_path, face_path, sep="\n")
+```
 
 ---
 
 ## 3. Checkpoints
 
-* Model weights (UMCC / MAG, EfficientNetV2-S) are hosted on Google Drive.
-* Fetch with:
-
-```bash
-python scripts/download_checkpoints.py
-```
-
-* Tags encode backbone & configuration (e.g., `tf_efficientnetv2_s.in1k_F0_Af_Lf_Z0`).
+* Pretrained model weights (UMCC / MAG, EfficientNetV2-S) are hosted on Google Drive.  
+* Fetch with:  
+  ```bash
+  python scripts/download_checkpoints.py
+  ```  
+* Tags encode backbone & configuration:  
+  ```
+  tf_efficientnetv2_s.in1k_F0_Af_Lf_Z0
+  ```
 
 ---
 
 ## 4. Metrics
 
-* CSV file: `metrics/final_metrics_with_full_configurations.csv`
-* Contains config, backbone, modality, and evaluation metrics.
-* Convert to Markdown table with:
+* CSV file: `metrics/final_metrics_with_full_configurations.csv`  
+* Contains all configs and evaluation metrics.  
 
-```bash
-python scripts/build_model_zoo.py
-```
 
 ---
 
@@ -91,41 +140,33 @@ python scripts/build_model_zoo.py
 
 Baseline (UMCC, EfficientNetV2-S, full augmentation, BCE, no freezing):
 
-* Validation balanced accuracy ≈ **0.91**
-* Test accuracy ≈ **91%**
-* Test ROC–AUC ≈ **0.97**
+* Validation balanced accuracy ≈ **0.91**  
+* Test accuracy ≈ **91%**  
+* Test ROC–AUC ≈ **0.97**  
 
-📌 Full results will be shared once the paper is accepted.
+📌 Full results (ablations, fairness, cross-dataset) will be added once the paper is accepted.
 
 ---
 
 ## 6. Ethics & Licensing
 
-* Labels = **apparent gender**, used only for technical evaluation
-* Demographics used strictly for fairness evaluation
-* Dataset redistribution complies with HaGRID license
-* Code: MIT license (see `LICENSE-CODE.md`)
+* Labels = **apparent gender**, used only for evaluation  
+* Demographics used strictly for fairness assessment  
+* **Source** – Derived from HaGRID (public licence with attribution & conditions)  
+* **Derived data** – redistributed under same licence  
+* **Code** – MIT (`LICENSE-CODE.md`)  
 
 ---
 
-## 7. Citation
+## 7. Dependencies
 
-```bibtex
-@misc{UnifiedGenderNet,
-  title        = {Unified Model for Gender Prediction from Either Hand or Face Images},
-  author       = {Ait Abderrahmane, Mohamed and collaborators},
-  year         = {2025},
-  howpublished = {\url{https://github.com/PatternBiometrics/UnifiedGenderNet}}
-}
-```
+* Python ≥ 3.9  
+* `torch`, `torchvision`, `timm`, `pandas`, `gdown`, `tabulate`, `typer`, `rich`
 
 ---
+
 
 ## 8. Acknowledgements
 
-Huge thanks to the original **HaGRID** authors for releasing their dataset and to the open-source community for the tools that enabled this derivative work.
-
-```
-
-Do you want me to also **add shields.io badges** (for Python version, license, repo status, etc.) at the top so the README looks more professional on GitHub?
-```
+* Huge thanks to the original **HaGRID** authors for releasing their dataset.  
+* Gratitude to the open-source community for providing tools that enabled this derivative work.
