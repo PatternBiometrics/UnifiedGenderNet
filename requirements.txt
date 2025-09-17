@@ -1,0 +1,8 @@
+torch>=2.0
+torchvision>=0.15
+timm>=0.9
+pandas>=2.0
+tabulate>=0.9
+gdown>=5.2
+typer>=0.12
+rich>=13.7
