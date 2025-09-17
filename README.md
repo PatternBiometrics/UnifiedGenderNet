@@ -154,7 +154,7 @@ Checkpoint tags follow the pattern:
 
 
 📌 **Best checkpoint**: The highest-scoring model (Balanced Accuracy ≈ 0.91, ROC–AUC ≈ 0.97) is stored as
-`checkpoints/1752668630.pt`.
+[checkpoints/1752668630.pt](https://drive.google.com/file/d/1yK36dx8mdG5dvxZNNc50pHoALl77M9jX/view?usp=sharing) .
 This corresponds to the configuration tag:
 
 ```
