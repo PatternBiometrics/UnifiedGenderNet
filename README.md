@@ -1,7 +1,5 @@
 # UnifiedGenderNet  
-[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE-CODE.md)  
-[![Status](https://img.shields.io/badge/status-under--review-yellow.svg)](#)  
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)  [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE-CODE.md)  [![Status](https://img.shields.io/badge/status-under--review-yellow.svg)](#)  
 
 A **unified** deep learning model for gender prediction that works with **either a hand or a face** image at inference time.  
 
