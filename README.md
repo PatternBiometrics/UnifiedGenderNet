@@ -148,14 +148,20 @@ Checkpoint tags follow the pattern:
 | **Lb / Lf / Lw** | **Loss function**: `Lb` = Binary Cross-Entropy, `Lf` = Focal Loss, `Lw` = Weighted BCE            |
 | **Z0 / Z1 / …**  | **Freezing policy**: `Z0` = no freezing (all layers trainable), `Z1` = partial freeze, etc.       |
 
-**Example**
+
+
+→ EfficientNetV2-S backbone, pretrained on ImageNet-1k, **flag OFF**, **full augmentation**, **focal loss**, **no freezing**.
+
+
+📌 **Best checkpoint**: The highest-scoring model (Balanced Accuracy ≈ 0.91, ROC–AUC ≈ 0.97) is stored as
+`checkpoints/1752668630.pt`.
+This corresponds to the configuration tag:
 
 ```
 tf_efficientnetv2_s.in1k_F0_Af_Lf_Z0
 ```
 
-→ EfficientNetV2-S backbone, pretrained on ImageNet-1k, **flag OFF**, **full augmentation**, **focal loss**, **no freezing**.
-
+→ EfficientNetV2-S backbone, pretrained on ImageNet-1k, flag OFF, full augmentation, focal loss, no freezing.
 
 ---
 
