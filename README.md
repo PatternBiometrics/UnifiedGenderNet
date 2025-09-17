@@ -128,10 +128,15 @@ Perfect idea ✅ — adding a **legend/cheat sheet** into the README will make i
 * Pretrained model weights (UMCC / MAG, EfficientNetV2-S) are hosted on Google Drive.
 * Fetch with:
 
-  ```bash
-  python scripts/download_checkpoints.py
-  ```
+By default, download all checkpoints:
+```bash
+python scripts/download_checkpoints.py
+```
 
+Or download only the best UMCC checkpoint:
+```bash
+python scripts/download_checkpoints.py --bestUMCC
+```
 ### Tag naming convention
 
 Checkpoint tags follow the pattern:
