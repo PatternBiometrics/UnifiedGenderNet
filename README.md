@@ -1,156 +1,131 @@
-# HaGRID-Derived Face–Hand Pairs  
-A derived dataset from HaGrid for demographic prediction (age, sex, skin tone) using aligned hand and face images.
 
+# UnifiedGenderNet  
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)  [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE-CODE.md)  [![Status](https://img.shields.io/badge/status-under--review-yellow.svg)](#) 
 
----
+A **unified** deep learning model for gender prediction that works with **either a hand or a face** image at inference time.  
 
-## 1 Overview
-This repository distributes a **derived subset of the original [HaGRID](https://github.com/hukenovs/hagrid) gesture-dataset**.  
-Every record pairs a cropped hand with the same user’s face and comes with audited demographic labels:
+It includes two architectural variants:
+- **UMCC** (Unified Modality-Conditioned Classifier)  
+- **MAG** (Modality-Aware Gated network)  
 
-| Column              | Description                              |
-|---------------------|------------------------------------------|
-| `id`                | Unique sample ID                         |
-| `user_id`           | Subject identifier (across samples)      |
-| `age`               | Age bucket                               |
-| `gender`            | Male / Female                            |
-| `race`              | skin-tone class        |
-| `labels`            | HaGRID gesture labels (stop_inverted, stop, or palm)      |
-| `hand_image_name`   | Filename of the cropped hand             |
-| `face_image_name`   | Filename of the cropped face             |
-
-The dataset ships as
-
-* **`aligned_dataset.zip`** – cropped & aligned PNG/JPG images (https://drive.google.com/file/d/1-52CWGkVhs4k3uWtvAdSz7tvplSX0_84/view?usp=drive_link)
-* **`train.csv` · `val.csv` · `test.csv`** – metadata splits  (https://drive.google.com/file/d/1W136bhwoVzT_ipjzABLie377wNNW8H6b/view?usp=drive_link, https://drive.google.com/file/d/1hilEWBh1GHsi469CQ5zckZnmqBOMo73q/view?usp=drive_link, https://drive.google.com/file/d/1dXKcOGVHGKRSERFoVN1HSSM-g7SlWnlf/view?usp=drive_link)
-* *(optional)* `removed_faces.zip` / `removed_hands.zip` – raw removals during cleaning
+⚠️ **Disclaimer**: This repository accompanies a manuscript currently under peer review.  
+To avoid premature disclosure of unpublished material, only baseline-level results are shown here.  
+Full ablations, fairness analyses, and cross-dataset evaluations will be released upon publication.
 
 ---
 
-## 2 Attribution & licensing
-* **Source** – Derived from HaGRID, released under a *public licence with attribution and conditions reserved*.  
-* **Derived data** – Redistributed **under the same licence**. See `HAGRID_DERIVED_LICENSE.pdf`.  
-* **Code** – All scripts in `scripts/` are MIT-licensed (`LICENSE-CODE.md`).
+## 1. Quick Start
 
----
-
-## 3 Quick start
+### Clone the repository  
 
 ```bash
-# 1 · Clone the repo
-git clone https://github.com/<your-user>/hagrid-facehand-pairs.git
-cd hagrid-facehand-pairs
-
-# 2 · Install requirements
-pip install -r scripts/requirements.txt
-
-# 3 · Download & unpack (~3 GB)
-python scripts/download_derived_hagrid.py
+git clone https://github.com/PatternBiometrics/UnifiedGenderNet.git
+cd UnifiedGenderNet
 ````
 
----
+### Create and activate a virtual environment
 
-## 4 Data structure & naming convention
-
-```
-data/
-└── Shared_Derived_HaGRID_unified_Model_For_Sex_Prediction/
-    ├── train.csv
-    ├── val.csv
-    ├── test.csv
-    └── images/
-        └── content/
-            └── aligned_dataset/
-                ├── faces/
-                │   ├── F_fe7d7a58-cc64-4755-849a-55970b08b75a.jpg
-                │   └── …
-                └── hands/
-                    ├── H_fe7d7a58-cc64-4755-849a-55970b08b75a.jpg
-                    └── …
+```bash
+python -m venv .venv
+source .venv/bin/activate    # on Linux/macOS
+# .venv\Scripts\activate     # on Windows PowerShell
 ```
 
-* **Face crops** live in `…/faces/` and start with **`F_`**.
-* **Hand crops** live in `…/hands/` and start with **`H_`**.
-* The UUID suffix is identical for the paired images of the same sample.
+### Install dependencies
 
-> **Example pair**
-> `faces/F_fe7d7a58-cc64-4755-849a-55970b08b75a.jpg`
-> `hands/H_fe7d7a58-cc64-4755-849a-55970b08b75a.jpg`
+```bash
+pip install -r requirements.txt
+```
+
+### Download pretrained artifacts
+
+```bash
+python scripts/download_checkpoints.py
+```
+
+```bash
+python scripts/download_metrics_csv.py
+```
+
 
 ---
 
-## 5 Minimal usage example
+## 2. Dataset
 
-```python
-import pandas as pd
-from pathlib import Path
+We release a derived subset of **HaGRID** with aligned face–hand crops.
 
-root = Path("data/Shared_Derived_HaGRID_unified_Model_For_Sex_Prediction")
-df   = pd.read_csv(root / "train.csv")
-print(f"{len(df):,} training samples")
-print(df.head())
+* **Metadata**: `train.csv`, `val.csv`, `test.csv`
+* **Cropped images**: `/faces/` and `/hands/`
+* **License**: Inherits from HaGRID (attribution + conditions)
 
-img_root = root / "images" / "content" / "aligned_dataset"
+👉 See: *HaGRID-Derived Face–Hand Pairs*
 
-hand_path = img_root / "hands" / df.loc[0, "hand_image_name"]
-face_path = img_root / "faces" / df.loc[0, "face_image_name"]
-print(hand_path, face_path, sep="\n")
+---
+
+## 3. Checkpoints
+
+* Model weights (UMCC / MAG, EfficientNetV2-S) are hosted on Google Drive.
+* Fetch with:
+
+```bash
+python scripts/download_checkpoints.py
+```
+
+* Tags encode backbone & configuration (e.g., `tf_efficientnetv2_s.in1k_F0_Af_Lf_Z0`).
+
+---
+
+## 4. Metrics
+
+* CSV file: `metrics/final_metrics_with_full_configurations.csv`
+* Contains config, backbone, modality, and evaluation metrics.
+* Convert to Markdown table with:
+
+```bash
+python scripts/build_model_zoo.py
 ```
 
 ---
-## Checkpoints 
-the studies are ablation study, cross modality , .....
-        ...  tables
 
-### Checkpoints 
- link to drive.
- 
-tag naming in config files ex.
-\texttt{tf\_efficientnetv2\_s.in1k\_F0\_Af\_Lf\_Z0}
+## 5. Results (Preview Only)
 
-i.e., EfficientNetV2-S backbone, flag OFF (F0), \emph{Full} augmentation (Af), focal loss (Lf), and no layer freezing (Z0). Its selection is supported by the validation summary recorded in the run logs: mean accuracy \(0.9108\) (std \(0.0027\)) with per-seed accuracies \(0.9100\) (seed 42), \(0.9085\) (seed 123), \(0.9137\) (seed 999).
+Baseline (UMCC, EfficientNetV2-S, full augmentation, BCE, no freezing):
 
+* Validation balanced accuracy ≈ **0.91**
+* Test accuracy ≈ **91%**
+* Test ROC–AUC ≈ **0.97**
 
-## 6 Dependencies
-
-* Python ≥ 3.8
-* [`gdown`] – Google-Drive download helper
-* `pandas`
-
-All pinned in `scripts/requirements.txt`.
+📌 Full results will be shared once the paper is accepted.
 
 ---
 
-## 7 Citation
+## 6. Ethics & Licensing
+
+* Labels = **apparent gender**, used only for technical evaluation
+* Demographics used strictly for fairness evaluation
+* Dataset redistribution complies with HaGRID license
+* Code: MIT license (see `LICENSE-CODE.md`)
+
+---
+
+## 7. Citation
 
 ```bibtex
-@misc{hagrid_derived_2025,
-  author       = {Mohamed Ait abderrahmane},
-  title        = {Unified Deep Learning Model for Sex Prediction from Either Face or Hand Image},
+@misc{UnifiedGenderNet,
+  title        = {Unified Model for Gender Prediction from Either Hand or Face Images},
+  author       = {Ait Abderrahmane, Mohamed and collaborators},
   year         = {2025},
-  howpublished = {\url{https://github.com/<your-user>/hagrid-facehand-pairs}}
+  howpublished = {\url{https://github.com/PatternBiometrics/UnifiedGenderNet}}
 }
-@misc{nuzhdin2024hagridv21mimagesstatic,
-    title={HaGRIDv2: 1M Images for Static and Dynamic Hand Gesture Recognition}, 
-    author={Anton Nuzhdin and Alexander Nagaev and Alexander Sautin and Alexander Kapitanov and Karina Kvanchiani},
-    year={2024},
-    eprint={2412.01508},
-    archivePrefix={arXiv},
-    primaryClass={cs.CV},
-    url={https://arxiv.org/abs/2412.01508}, 
-}
-
 ```
 
 ---
 
-## 8 Contact
+## 8. Acknowledgements
 
-Open an issue or ping **@\Ait-abderrahmane** on GitHub.
+Huge thanks to the original **HaGRID** authors for releasing their dataset and to the open-source community for the tools that enabled this derivative work.
 
----
+```
 
-## 9 Acknowledgements
-
-Huge thanks to the original HaGRID authors for releasing their dataset and to the open-source community for the tools that enabled this derivative work.
-
+Do you want me to also **add shields.io badges** (for Python version, license, repo status, etc.) at the top so the README looks more professional on GitHub?
+```
