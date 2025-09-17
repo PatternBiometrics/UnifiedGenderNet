@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Data / artifacts
+checkpoints/
+metrics/
+data/
+*.zip
+*.pkl
+*.json
+# Notebooks/OS
+.ipynb_checkpoints/
+.DS_Store
