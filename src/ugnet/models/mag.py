@@ -3,7 +3,7 @@ import timm
 
 class MAG(nn.Module):
     """Modality-Aware Gated network"""
-    def __init__(self, backbone="efficientnetv2_s", gating="soft", lambda_mod=0.3):
+    def __init__(self, backbone="tf_efficientnetv2_s", gating="soft", lambda_mod=0.3):
         super().__init__()
         self.gating, self.lambda_mod = gating, lambda_mod
         self.backbone = timm.create_model(backbone, pretrained=True, num_classes=0, global_pool="avg")
