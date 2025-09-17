@@ -114,29 +114,25 @@ print(hand_path, face_path, sep="\n")
 
 ## 3. Checkpoints
 
-* Pretrained model weights (UMCC / MAG, EfficientNetV2-S) are hosted on Google Drive.  
-* Fetch with:  
-  ```bash
-  python scripts/download_checkpoints.py
-  ```  
-Perfect idea ✅ — adding a **legend/cheat sheet** into the README will make it crystal clear for reviewers and colleagues what those cryptic tags mean. Here’s the updated section you can **drop into your README.md** (just after *Checkpoints*):
-
----
-
-## 3. Checkpoints
-
 * Pretrained model weights (UMCC / MAG, EfficientNetV2-S) are hosted on Google Drive.
 * Fetch with:
+
 
 By default, download all checkpoints:
 ```bash
 python scripts/download_checkpoints.py
 ```
 
-Or download only the best UMCC checkpoint:
+, download only the best UMCC checkpoint:
 ```bash
-python scripts/download_checkpoints.py --bestUMCC
+python scripts/download_checkpoints.py --best-umcc
 ```
+
+
+Or download **only the best MAG checkpoint**:
+  ```bash
+  python scripts/download_checkpoints.py --best-mag
+  ```
 ### Tag naming convention
 
 Checkpoint tags follow the pattern:
@@ -155,18 +151,34 @@ Checkpoint tags follow the pattern:
 
 
 
-→ EfficientNetV2-S backbone, pretrained on ImageNet-1k, **flag OFF**, **full augmentation**, **focal loss**, **no freezing**.
+### 📌 Best Checkpoints
 
+**UMCC (best)**
+[1752668630.pt](https://drive.google.com/file/d/1yK36dx8mdG5dvxZNNc50pHoALl77M9jX/view?usp=sharing)
 
-📌 **Best checkpoint**: The highest-scoring model (Balanced Accuracy ≈ 0.91, ROC–AUC ≈ 0.97) is stored as
-[checkpoints/1752668630.pt](https://drive.google.com/file/d/1yK36dx8mdG5dvxZNNc50pHoALl77M9jX/view?usp=sharing) (for UMCC Model).
-This corresponds to the configuration tag:
+* Tag:
 
-```
-tf_efficientnetv2_s.in1k_F0_Af_Lf_Z0
-```
+  ```
+  tf_efficientnetv2_s.in1k_F0_Af_Lf_Z0
+  ```
+* EfficientNetV2-S backbone, pretrained on ImageNet-1k
+* Flag OFF, full augmentation, **focal loss**, no freezing
+* Balanced Accuracy ≈ **0.91**, ROC–AUC ≈ **0.97**
 
-→ EfficientNetV2-S backbone, pretrained on ImageNet-1k, flag OFF, full augmentation, focal loss, no freezing.
+---
+
+**MAG (best)**
+[tf\_efficientnetv2\_s.in1k\_F0\_Af\_Lb\_Z0\_gating=soft\_seed42.pt](https://drive.google.com/file/d/1dtaaEXrHwNI_vhO327DyUL74_5gFCeSX/view?usp=drive_link)
+
+* Tag:
+
+  ```
+  tf_efficientnetv2_s.in1k_F0_Af_Lb_Z0_gating=soft_seed42
+  ```
+* EfficientNetV2-S backbone, pretrained on ImageNet-1k
+* Flag OFF, full augmentation, **BCE loss**, no freezing
+* Soft gating, seed=42
+* Balanced Accuracy ≈ **0.90**, ROC–AUC ≈ **0.96+**
 
 ---
 
