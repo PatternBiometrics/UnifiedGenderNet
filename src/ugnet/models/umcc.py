@@ -3,7 +3,7 @@ import timm
 
 class UMCC(nn.Module):
     """Unified Modality-Conditioned Classifier"""
-    def __init__(self, backbone="efficientnetv2_s", flag_on=True, drop_rate=0.2):
+    def __init__(self, backbone="tf_efficientnetv2_s", flag_on=True, drop_rate=0.2):
         super().__init__()
         self.flag_on = flag_on
         self.backbone = timm.create_model(backbone, pretrained=True, num_classes=0,
