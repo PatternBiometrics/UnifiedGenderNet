@@ -119,10 +119,43 @@ print(hand_path, face_path, sep="\n")
   ```bash
   python scripts/download_checkpoints.py
   ```  
-* Tags encode backbone & configuration:  
+Perfect idea ✅ — adding a **legend/cheat sheet** into the README will make it crystal clear for reviewers and colleagues what those cryptic tags mean. Here’s the updated section you can **drop into your README.md** (just after *Checkpoints*):
+
+---
+
+## 3. Checkpoints
+
+* Pretrained model weights (UMCC / MAG, EfficientNetV2-S) are hosted on Google Drive.
+* Fetch with:
+
+  ```bash
+  python scripts/download_checkpoints.py
   ```
-  tf_efficientnetv2_s.in1k_F0_Af_Lf_Z0
-  ```
+
+### Tag naming convention
+
+Checkpoint tags follow the pattern:
+
+```
+<backbone>.<pretrain>_F#_A#_L#_Z#
+```
+
+| Code             | Meaning                                                                                           |
+| ---------------- | ------------------------------------------------------------------------------------------------- |
+| **Backbone**     | e.g. `tf_efficientnetv2_s.in1k` → EfficientNetV2-S pretrained on ImageNet-1k                      |
+| **F0 / F1**      | **Flag conditioning** (UMCC only): `F0` = flag OFF, `F1` = flag ON (hand = \[1,0], face = \[0,1]) |
+| **Af / An**      | **Augmentation**: `Af` = Full augmentation (flips, color jitter, rotation, etc.), `An` = None     |
+| **Lb / Lf / Lw** | **Loss function**: `Lb` = Binary Cross-Entropy, `Lf` = Focal Loss, `Lw` = Weighted BCE            |
+| **Z0 / Z1 / …**  | **Freezing policy**: `Z0` = no freezing (all layers trainable), `Z1` = partial freeze, etc.       |
+
+**Example**
+
+```
+tf_efficientnetv2_s.in1k_F0_Af_Lf_Z0
+```
+
+→ EfficientNetV2-S backbone, pretrained on ImageNet-1k, **flag OFF**, **full augmentation**, **focal loss**, **no freezing**.
+
 
 ---
 
