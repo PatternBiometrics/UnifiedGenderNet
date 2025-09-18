@@ -11,7 +11,7 @@ def load_img(p,size=224):
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--arch",choices=["umcc","mag"],default="umcc")
-    ap.add_argument("--backbone",default="efficientnetv2_s")
+    ap.add_argument("--backbone",default="tf_efficientnetv2_s")
     ap.add_argument("--ckpt",required=True)
     ap.add_argument("--modality",choices=["hand","face"],default="face")
     ap.add_argument("--glob",required=True)
