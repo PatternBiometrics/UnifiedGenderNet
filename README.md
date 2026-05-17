@@ -219,7 +219,6 @@ Baseline (UMCC, EfficientNetV2-S, full augmentation, BCE, no freezing):
 
 ---
 
-
 ## 8. Acknowledgements
 
 * Huge thanks to the original **HaGRID** authors for releasing their dataset.  
