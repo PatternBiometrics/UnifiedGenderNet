@@ -159,7 +159,7 @@ Checkpoint tags follow the pattern:
 * Tag:
 
   ```
-  tf_efficientnetv2_s.in1k_F0_Af_Lf_Z0
+  tf_efficientnetv2_s.in1k_F1_Af_Lf_Z0
   ```
 * EfficientNetV2-S backbone, pretrained on ImageNet-1k
 * Flag OFF, full augmentation, **focal loss**, no freezing
